@@ -215,6 +215,114 @@
       .cart-form { grid-template-columns: 1fr; }
       .cart-form-group.full { grid-column: 1; }
     }
+
+    /* ── ORDER CONFIRMATION SCREEN ── */
+    .confirm-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      background: var(--cream);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+    .confirm-screen.open { display: flex; }
+    .confirm-box {
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      animation: slideUp 0.5s cubic-bezier(0.34,1.2,0.64,1);
+    }
+    .confirm-icon {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: rgba(122,145,120,0.12);
+      border: 1px solid rgba(122,145,120,0.3);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+    .confirm-icon svg { width: 32px; height: 32px; }
+    .confirm-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 300;
+      color: var(--ink);
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+    .confirm-title em { font-style: italic; color: var(--moss); }
+    .confirm-subtitle {
+      font-size: 0.82rem;
+      color: var(--ink-light);
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+    .confirm-ref {
+      background: var(--white);
+      border: 1px solid rgba(122,145,120,0.2);
+      padding: 0.7rem 1.5rem;
+      display: inline-block;
+      margin-bottom: 2rem;
+    }
+    .confirm-ref .ref-label { font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--sage); margin-bottom: 0.2rem; }
+    .confirm-ref .ref-number { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--ink); letter-spacing: 0.1em; }
+    .confirm-details {
+      background: var(--white);
+      border: 1px solid rgba(122,145,120,0.2);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    .confirm-details-title {
+      font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--sage); margin-bottom: 1rem;
+    }
+    .confirm-item-row {
+      display: flex; justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(122,145,120,0.1);
+      font-size: 0.82rem;
+    }
+    .confirm-item-row:last-child { border-bottom: none; }
+    .confirm-item-name { color: var(--ink); }
+    .confirm-item-price { color: var(--ink-light); }
+    .confirm-total-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      padding-top: 1rem; margin-top: 0.5rem;
+      border-top: 1px solid rgba(122,145,120,0.2);
+    }
+    .confirm-total-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-light); }
+    .confirm-total-amount { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; color: var(--ink); }
+    .confirm-pickup {
+      background: rgba(122,145,120,0.08);
+      border: 1px solid rgba(122,145,120,0.2);
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
+      font-size: 0.82rem;
+      color: var(--ink-light);
+      line-height: 1.8;
+    }
+    .confirm-pickup strong { color: var(--moss); font-weight: 500; }
+    .confirm-actions { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+    .confirm-btn-wa {
+      background: var(--moss); color: var(--cream); border: none;
+      padding: 0.8rem 2rem; font-family: 'Jost', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+      cursor: pointer; text-decoration: none; display: inline-block;
+      transition: background 0.2s;
+    }
+    .confirm-btn-wa:hover { background: var(--gold); }
+    .confirm-btn-back {
+      background: transparent; color: var(--moss);
+      border: 1px solid var(--moss); padding: 0.8rem 2rem;
+      font-family: 'Jost', sans-serif; font-size: 0.72rem;
+      letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .confirm-btn-back:hover { background: var(--moss); color: var(--cream); }
   </style>
 </head>
 <body>
@@ -352,6 +460,7 @@ This is a small, personal pop-up &mdash; so every order genuinely means a lot to
     <div class="cart-form">
       <div class="cart-form-group"><label>Your Name</label><input type="text" id="custName" placeholder="Full name" /></div>
       <div class="cart-form-group"><label>Phone</label><input type="tel" id="custPhone" placeholder="+91 XXXXX XXXXX" /></div>
+      <div class="cart-form-group full"><label>Email Address <span style="color:var(--sage);font-size:0.6rem;">(your receipt will be sent here)</span></label><input type="email" id="custEmail" placeholder="your@email.com" /></div>
       <div class="cart-form-group full">
         <label>Pickup or Delivery?</label>
         <select id="custDate">
@@ -659,6 +768,7 @@ This is a small, personal pop-up &mdash; so every order genuinely means a lot to
 
     var custName  = name;
     var custPhone = phone;
+    var custEmail = document.getElementById('custEmail').value.trim();
     var custDate  = date;
     var custNote  = document.getElementById('custNote').value;
     var total     = cartTotal();
@@ -675,6 +785,7 @@ This is a small, personal pop-up &mdash; so every order genuinely means a lot to
           'action=saveOrder',
           'name='      + encodeURIComponent(custName),
           'phone='     + encodeURIComponent(custPhone),
+          'email='     + encodeURIComponent(custEmail),
           'date='      + encodeURIComponent(custDate),
           'note='      + encodeURIComponent(custNote),
           'total='     + encodeURIComponent(total),
@@ -690,9 +801,12 @@ This is a small, personal pop-up &mdash; so every order genuinely means a lot to
         };
         xhr.send();
 
+        var savedItems = orderItems.slice();
+        var savedTotal = total;
+        var savedName  = custName;
         cart = {};
         renderMenu(); updateCartBar(); closeCartModal();
-        showToast('Order confirmed! See you on 4 April. ');
+        showConfirmScreen(response.razorpay_payment_id, savedItems, savedTotal, savedName, custEmail, custDate);
       },
       prefill: { name: custName, contact: custPhone },
       notes: { date: custDate, note: custNote },
@@ -780,7 +894,80 @@ This is a small, personal pop-up &mdash; so every order genuinely means a lot to
     showToast('Changes saved and published!');
   }
 
-    function showToast(msg) {
+  
+  // Store last order for PDF generation
+  var lastOrder = {};
+
+  function showConfirmScreen(paymentId, orderItems, total, custName, custEmail, custDate) {
+    lastOrder = { paymentId: paymentId, orderItems: orderItems, total: total, custName: custName, custEmail: custEmail, custDate: custDate };
+
+    document.getElementById('confirmRef').textContent = paymentId || 'N/A';
+    document.getElementById('confirmGreeting').textContent = 'Hi ' + custName + '! We cannot wait to see you on 4 April.';
+
+    var listEl = document.getElementById('confirmItemList');
+    listEl.innerHTML = '';
+    orderItems.forEach(function(oi) {
+      var row = document.createElement('div');
+      row.className = 'confirm-item-row';
+      row.innerHTML = '<span class="confirm-item-name">' + oi.qty + ' x ' + oi.name + '</span><span class="confirm-item-price">Rs.' + (oi.price * oi.qty).toLocaleString('en-IN') + '</span>';
+      listEl.appendChild(row);
+    });
+
+    document.getElementById('confirmTotal').textContent = total.toLocaleString('en-IN');
+
+    // WhatsApp pre-filled message
+    var waMsg = 'Hi Jason! I just placed an order on Sonder.%0A%0A';
+    waMsg += 'Order Reference: ' + (paymentId || 'N/A') + '%0A';
+    waMsg += 'Name: ' + custName + '%0A';
+    waMsg += 'Pickup: ' + (custDate || '4 April 2026') + '%0A%0AItems:%0A';
+    orderItems.forEach(function(oi) {
+      waMsg += oi.qty + 'x ' + oi.name + ' - Rs.' + (oi.price * oi.qty) + '%0A';
+    });
+    waMsg += '%0ATotal Paid: Rs.' + total;
+    document.getElementById('waReceiptLink').href = 'https://wa.me/919538680557?text=' + waMsg;
+
+    var emailNote = document.getElementById('emailSentNote');
+    if (custEmail) { emailNote.style.display = 'block'; } else { emailNote.style.display = 'none'; }
+
+    document.getElementById('confirmScreen').classList.add('open');
+    window.scrollTo(0, 0);
+  }
+
+  function downloadReceipt() {
+    var o = lastOrder;
+    if (!o.paymentId) return;
+    var itemRows = '';
+    o.orderItems.forEach(function(oi) {
+      itemRows += '<tr><td style="padding:8px 0;border-bottom:1px solid #eee;font-family:Georgia,serif;">' + oi.qty + ' x ' + oi.name + '</td><td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;font-family:Georgia,serif;">Rs.' + (oi.price * oi.qty).toLocaleString('en-IN') + '</td></tr>';
+    });
+    var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Sonder Receipt</title><style>@media print{body{margin:0}}</style></head><body style="margin:0;padding:40px;background:#faf6ef;font-family:Georgia,serif;color:#2c2a26;">' +
+      '<div style="max-width:480px;margin:0 auto;background:#fff;padding:40px;border:1px solid #e0d8c8;">' +
+      '<div style="text-align:center;margin-bottom:32px;"><h1 style="font-size:2rem;font-weight:300;color:#4a6048;margin:0;">Sonder</h1>' +
+      '<p style="font-size:0.75rem;letter-spacing:0.2em;color:#7a9178;margin:4px 0 0;text-transform:uppercase;">by Jason · Easter Pop-Up 2026</p></div>' +
+      '<div style="border-top:1px solid #eee;border-bottom:1px solid #eee;padding:16px 0;margin-bottom:24px;">' +
+      '<table style="width:100%;font-size:0.78rem;color:#6b6560;border-collapse:collapse;">' +
+      '<tr><td style="padding:4px 0;">Reference</td><td style="text-align:right;color:#2c2a26;font-weight:bold;">' + (o.paymentId||'N/A') + '</td></tr>' +
+      '<tr><td style="padding:4px 0;">Name</td><td style="text-align:right;color:#2c2a26;">' + o.custName + '</td></tr>' +
+      '<tr><td style="padding:4px 0;">Date Issued</td><td style="text-align:right;color:#2c2a26;">' + new Date().toLocaleDateString('en-IN') + '</td></tr>' +
+      '<tr><td style="padding:4px 0;">Pickup</td><td style="text-align:right;color:#2c2a26;">Saturday, 4 April 2026 · 4-8 PM IST</td></tr>' +
+      '</table></div>' +
+      '<table style="width:100%;border-collapse:collapse;margin-bottom:24px;">' + itemRows + '</table>' +
+      '<div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:16px;border-top:2px solid #4a6048;">' +
+      '<span style="font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:#7a9178;">Total Paid</span>' +
+      '<span style="font-size:1.5rem;color:#2c2a26;">Rs.' + o.total.toLocaleString('en-IN') + '</span></div>' +
+      '<div style="margin-top:32px;padding-top:16px;border-top:1px solid #eee;font-size:0.72rem;color:#a8bfa6;text-align:center;line-height:1.8;">' +
+      'Cox Town, Bangalore · +91 95386 80557<br>work.jasonandrews@gmail.com</div></div>' +
+      '<script>window.onload=function(){window.print();}<\/script></body></html>';
+    var win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+  }
+
+
+  function closeConfirmScreen() {
+    document.getElementById('confirmScreen').classList.remove('open');
+  }
+  function showToast(msg) {
     var t = document.getElementById('toast');
     t.textContent = msg;
     t.classList.add('show');
@@ -791,5 +978,43 @@ This is a small, personal pop-up &mdash; so every order genuinely means a lot to
   updateCartBar();
   fetchStock();
 </script>
+
+<!-- ORDER CONFIRMATION SCREEN -->
+<div class="confirm-screen" id="confirmScreen">
+  <div class="confirm-box">
+    <div class="confirm-icon">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="14" stroke="#7a9178" stroke-width="1.2"/>
+        <path d="M9 16.5l4.5 4.5 9-9" stroke="#4a6048" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h2 class="confirm-title">Order <em>confirmed,</em><br>thank you!</h2>
+    <p class="confirm-subtitle" id="confirmGreeting">We can't wait to see you on 4 April.</p>
+    <div class="confirm-ref">
+      <div class="ref-label">Payment Reference</div>
+      <div class="ref-number" id="confirmRef">—</div>
+    </div>
+    <div class="confirm-details">
+      <div class="confirm-details-title">Your Order</div>
+      <div id="confirmItemList"></div>
+      <div class="confirm-total-row">
+        <span class="confirm-total-label">Total Paid</span>
+        <span class="confirm-total-amount">&#8377;<span id="confirmTotal">0</span></span>
+      </div>
+    </div>
+    <div class="confirm-pickup">
+      <strong>Pickup details</strong><br>
+      Saturday, 4 April 2026 &middot; 4:00 PM &ndash; 8:00 PM IST<br>
+      Cox Town, Bangalore<br><br>
+      It would be great if you could arrange a pickup through a third party delivery app, or swing by to collect it from our address.
+    </div>
+    <div class="confirm-actions">
+      <button class="confirm-btn-wa" onclick="downloadReceipt()">&#8595; Download Receipt (PDF)</button>
+      <a id="waReceiptLink" href="https://wa.me/919538680557" class="confirm-btn-wa" target="_blank" rel="noopener" style="background:var(--sage);">Message Jason on WhatsApp</a>
+      <button class="confirm-btn-back" onclick="closeConfirmScreen()">Back to Menu</button>
+    </div>
+    <p id="emailSentNote" style="margin-top:1rem;font-size:0.72rem;color:var(--sage);letter-spacing:0.1em;display:none;">&#10003; Receipt also sent to your email</p>
+  </div>
+</div>
 </body>
 </html>
